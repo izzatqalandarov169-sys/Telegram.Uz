@@ -28,7 +28,7 @@ jobs:
       - name: Prepare Flutter Android Environment
         run: |
           cp lib/main.dart main.dart.bak
-          flutter create . --platforms=android --org com.telegram.fullapp
+          flutter create . --project-name telegram_app --platforms=android --org com.telegram.fullapp
           mv main.dart.bak lib/main.dart
 
       - name: Build APK
