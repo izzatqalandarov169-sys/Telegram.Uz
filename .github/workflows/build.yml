@@ -22,22 +22,18 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.19.x'
           channel: 'stable'
 
-      - name: Generate Clean Project & Build
+      - name: Build Debug APK
         run: |
-          mkdir temp_app
-          cd temp_app
-          flutter create --project-name telegram_app --platforms=android .
-          cp -r ../lib/. lib/
-          flutter pub add provider http shared_preferences intl url_launcher telegram_web_app
-          flutter pub get
+          flutter create --project-name telegram_app my_app
+          cd my_app
+          cp ../lib/main.dart lib/main.dart
           flutter build apk --debug --no-tree-shake-icons
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
-          path: temp_app/build/app/outputs/flutter-apk/app-debug.apk
+          path: my_app/build/app/outputs/flutter-apk/app-debug.apk
           
