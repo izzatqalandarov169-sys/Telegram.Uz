@@ -2,7 +2,8 @@ name: Build Flutter APK
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -10,31 +11,53 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: 📥 Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Java JDK
+      - name: ☕ Java 17
         uses: actions/setup-java@v4
         with:
-          java-version: '11'
-          distribution: 'temurin'
+          distribution: temurin
+          java-version: "17"
 
-      - name: Set up Flutter
+      - name: 🐦 Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: stable
+          cache: true
 
-      - name: Build APK
+      - name: ⚙️ Configure Flutter Java
         run: |
+          flutter config --jdk-dir="$JAVA_HOME"
+          java -version
+          flutter --version
+
+      - name: 📦 Create Flutter Android project
+        run: |
+          rm -rf temp_app
           mkdir temp_app
           cd temp_app
-          flutter create --project-name telegram_app --platforms=android .
-          cp -r ../lib/. lib/
-          flutter build apk --debug
 
-      - name: Upload APK Artifact
+          flutter create \
+            --project-name telegram_app \
+            --platforms=android \
+            .
+
+      - name: 📁 Copy application code
+        run: |
+          cp -r lib/. temp_app/lib/
+
+      - name: 📚 Get dependencies
+        working-directory: temp_app
+        run: flutter pub get
+
+      - name: 🔨 Build APK
+        working-directory: temp_app
+        run: flutter build apk --debug
+
+      - name: 📤 Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: app-debug
+          name: telegram-app-debug
           path: temp_app/build/app/outputs/flutter-apk/app-debug.apk
-          
+          if-no-files-found: error
