@@ -1,4 +1,4 @@
-import 'dart00:async';
+import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 
@@ -34,7 +34,6 @@ class MainNavigationScreen extends StatefulWidget {
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _currentIndex = 0;
 
-  // Foydalanuvchi ma'lumotlari
   final String myUserId = "ADMIN_777";
   final String adminUserId = "ADMIN_777";
 
@@ -46,9 +45,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   List<String> myGifts = ["🧸 Teddy Bear", "🏆 Golden Trophy", "🚀 Rocket Gift"];
   
-  // Referal tizimi
   int invitedFriends = 12;
-  int timerSeconds = 604800; // 1 hafta
+  int timerSeconds = 604800;
   Timer? _weeklyTimer;
 
   @override
@@ -60,26 +58,22 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   void _startTimer() {
     _weeklyTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (timerSeconds > 0) {
-        setState(() => timerSeconds--);
+        if (mounted) setState(() => timerSeconds--);
       } else {
         _giveWeeklyRewards();
-        setState(() => timerSeconds = 604800);
+        if (mounted) setState(() => timerSeconds = 604800);
       }
     });
   }
 
   void _giveWeeklyRewards() {
-    setState(() {
-      userStars += 100;
-      myGifts.add("🎁 100 Stars Special Gift");
-      isPremium = true;
-    });
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("🎉 Haftalik referal tanlovi tugadi! G'olibga 100 Stars + 100 Stars Gift + 3 oylik Premium o'tkazildi!"),
-        backgroundColor: Colors.green,
-      ),
-    );
+    if (mounted) {
+      setState(() {
+        userStars += 100;
+        myGifts.add("🎁 100 Stars Special Gift");
+        isPremium = true;
+      });
+    }
   }
 
   @override
@@ -151,7 +145,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   }
 }
 
-// ================= 1. TELEGRAM 1GA1 CHAT TAB =================
 class ChatListTab extends StatelessWidget {
   const ChatListTab({super.key});
 
@@ -268,7 +261,6 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
   }
 }
 
-// ================= 2. OMAD (GIFT SPINNER & TANLOV) TAB =================
 class OmadTab extends StatelessWidget {
   final int stars;
   final double ton;
@@ -314,10 +306,8 @@ class OmadTab extends StatelessWidget {
                 padding: const EdgeInsets.all(15),
                 child: Column(
                   children: [
-                    const Text("🚀 Rocket & Slots (Gifts Spinner)", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF38BDF8))),
+                    const Text("🚀 Rocket & Slots", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF38BDF8))),
                     const SizedBox(height: 10),
-                    const Text("Stavka tikib Stars va noyob Giftlarni yutib oling!", style: TextStyle(color: Colors.grey)),
-                    const SizedBox(height: 15),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -326,9 +316,6 @@ class OmadTab extends StatelessWidget {
                           onPressed: () {
                             bool win = Random().nextBool();
                             onSpin(10, win);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(win ? "🎉 Omadingiz keldi! +20 Stars yutdingiz!" : "❌ Yutqazdingiz (10 Stars ketdi)")),
-                            );
                           },
                           child: const Text("SPIN (10 ⭐️)", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
                         ),
@@ -337,9 +324,6 @@ class OmadTab extends StatelessWidget {
                           onPressed: () {
                             bool win = Random().nextDouble() > 0.3;
                             onSpin(20, win);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(win ? "🚀 Rocket Uchdi! +40 Stars yutdingiz!" : "💥 Rocket portladi!")),
-                            );
                           },
                           child: const Text("ROCKET (20 ⭐️)", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                         ),
@@ -350,32 +334,13 @@ class OmadTab extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 15),
-
             Card(
               color: const Color(0xFF1E293B),
               child: Padding(
                 padding: const EdgeInsets.all(15),
                 child: Column(
                   children: [
-                    const Text("🏆 Haftalik Avto-Referal Tanlovi", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.amber)),
-                    const SizedBox(height: 8),
-                    Text("Siz taklif qilgan do'stlar: $invitedCount ta"),
-                    Text("Tanlov tugashiga: ${secondsLeft ~/ 3600} soat ${ (secondsLeft % 3600) ~/ 60 } daqiqa qoldi"),
-                    const SizedBox(height: 10),
-                    const Text("🎁 G'olibga: 100 Stars + 100 Stars'lik Gift + 3 Oylik Premium!", textAlign: TextAlign.center, style: TextStyle(color: Colors.greenAccent, fontSize: 13)),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 15),
-
-            Card(
-              color: const Color(0xFF1E293B),
-              child: Padding(
-                padding: const EdgeInsets.all(15),
-                child: Column(
-                  children: [
-                    const Text("🎁 Mening Giftlarim (Transfer)", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    const Text("🎁 Mening Giftlarim", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 10),
                     gifts.isEmpty
                         ? const Text("Sizda sovga yo'q", style: TextStyle(color: Colors.grey))
@@ -385,13 +350,7 @@ class OmadTab extends StatelessWidget {
                                 leading: const Icon(Icons.card_giftcard, color: Colors.amber),
                                 title: Text(g),
                                 trailing: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF0284C7)),
-                                  onPressed: () {
-                                    onTransfer(g);
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text("$g boshqa foydalanuvchiga muvaffaqiyatli o'tkazildi!")),
-                                    );
-                                  },
+                                  onPressed: () => onTransfer(g),
                                   child: const Text("Transfer"),
                                 ),
                               );
@@ -408,7 +367,6 @@ class OmadTab extends StatelessWidget {
   }
 }
 
-// ================= 3. PROFIL VA ADMIN PANEL TAB =================
 class ProfileTab extends StatelessWidget {
   final String userId;
   final String adminId;
@@ -445,26 +403,16 @@ class ProfileTab extends StatelessWidget {
             title: Text("ID: $userId", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
             subtitle: Text(isPremium ? "⭐ Telegram Premium" : "O'zbekiston | Oddiy profil"),
           ),
-          const Divider(),
           ListTile(
             leading: const Icon(Icons.star, color: Colors.amber),
             title: Text("Stars Balansi: $stars ⭐️"),
           ),
-          ListTile(
-            leading: const Icon(Icons.credit_card, color: Colors.green),
-            title: const Text("Karta qo'shish (Stars/Gift/Premium Xaridi)"),
-            onTap: () => _openCardDialog(context),
-          ),
-          const SizedBox(height: 30),
-
+          const SizedBox(height: 20),
           if (isAdmin)
             ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.redAccent,
-                padding: const EdgeInsets.all(15),
-              ),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent, padding: const EdgeInsets.all(15)),
               icon: const Icon(Icons.admin_panel_settings),
-              label: const Text("🛠 ADMIN PANEL (Faqat Men Uchun)", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              label: const Text("🛠 ADMIN PANEL", style: TextStyle(fontWeight: FontWeight.bold)),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -485,38 +433,8 @@ class ProfileTab extends StatelessWidget {
       ),
     );
   }
-
-  void _openCardDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text("💳 Karta Rekvizitlarini Qo'shish"),
-        content: const Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(decoration: InputDecoration(hintText: "8600 **** **** ****")),
-            SizedBox(height: 10),
-            TextField(decoration: InputDecoration(hintText: "Muddati (MM/YY)")),
-          ],
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("Bekor qilish")),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(ctx);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Karta muvaffaqiyatli saqlandi!")),
-              );
-            },
-            child: const Text("Saqlash"),
-          )
-        ],
-      ),
-    );
-  }
 }
 
-// ================= 4. ADMIN CONTROL PANEL =================
 class AdminControlScreen extends StatefulWidget {
   final int stars;
   final bool isMuted;
@@ -562,27 +480,11 @@ class _AdminControlScreenState extends State<AdminControlScreen> {
         padding: const EdgeInsets.all(15),
         children: [
           ListTile(
-            title: const Text("➕ Promo Code Yaratish"),
-            trailing: const Icon(Icons.add_card),
-            onTap: () => _notify(context, "Yangi Promokod yaratildi!"),
-          ),
-          ListTile(
-            title: const Text("💳 Karta qo'shish / Rekvizitlarni yangilash"),
-            trailing: const Icon(Icons.payment),
-            onTap: () => _notify(context, "Karta rekvizitlari saqlandi!"),
-          ),
-          ListTile(
-            title: const Text("🏷 Narxlarni Yangilash"),
-            trailing: const Icon(Icons.price_change),
-            onTap: () => _notify(context, "Barcha xizmat va Gift narxlari yangilandi!"),
-          ),
-          ListTile(
             title: const Text("⭐️ Stars Balansini Qo'shish (+100 Stars)"),
             trailing: const Icon(Icons.star),
             onTap: () {
               setState(() => currentStars += 100);
               widget.onSave(currentStars, muted, spammed, premium);
-              _notify(context, "Balansga +100 Stars qo'shildi!");
             },
           ),
           ListTile(
@@ -590,16 +492,6 @@ class _AdminControlScreenState extends State<AdminControlScreen> {
             trailing: const Icon(Icons.card_giftcard),
             onTap: () {
               widget.onAddGift("💎 Crown Special Gift");
-              _notify(context, "Foydalanuvchiga yangi Gift yuborildi!");
-            },
-          ),
-          ListTile(
-            title: Text(premium ? "⭐ Premium'ni Olib Tashlash" : "⭐ Hisobga Telegram Premium Qo'shish"),
-            trailing: const Icon(Icons.workspace_premium),
-            onTap: () {
-              setState(() => premium = !premium);
-              widget.onSave(currentStars, muted, spammed, premium);
-              _notify(context, "Premium holati o'zgartirildi!");
             },
           ),
           SwitchListTile(
@@ -610,22 +502,8 @@ class _AdminControlScreenState extends State<AdminControlScreen> {
               widget.onSave(currentStars, muted, spammed, premium);
             },
           ),
-          SwitchListTile(
-            title: const Text("🚫 Spam / Unspam Qilish"),
-            value: spammed,
-            onChanged: (val) {
-              setState(() => spammed = val);
-              widget.onSave(currentStars, muted, spammed, premium);
-            },
-          ),
         ],
       ),
-    );
-  }
-
-  void _notify(BuildContext context, String text) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(text), duration: const Duration(seconds: 2)),
     );
   }
 }
