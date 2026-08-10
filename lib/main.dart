@@ -43,8 +43,12 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   bool isMuted = false;
   bool isSpammed = false;
 
-  List<String> myGifts = ["🧸 Teddy Bear", "🏆 Golden Trophy", "🚀 Rocket Gift"];
-  
+  List<String> myGifts = [
+    "🧸 Teddy Bear",
+    "🏆 Golden Trophy",
+    "🚀 Rocket Gift"
+  ];
+
   int invitedFriends = 12;
   int timerSeconds = 604800;
   Timer? _weeklyTimer;
@@ -58,10 +62,14 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   void _startTimer() {
     _weeklyTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (timerSeconds > 0) {
-        if (mounted) setState(() => timerSeconds--);
+        if (mounted) {
+          setState(() => timerSeconds--);
+        }
       } else {
         _giveWeeklyRewards();
-        if (mounted) setState(() => timerSeconds = 604800);
+        if (mounted) {
+          setState(() => timerSeconds = 604800);
+        }
       }
     });
   }
@@ -96,7 +104,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           if (userStars >= cost) {
             setState(() {
               userStars -= cost;
-              if (win) userStars += (cost * 2);
+              if (win) {
+                userStars += cost * 2;
+              }
             });
           }
         },
@@ -134,11 +144,22 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         backgroundColor: const Color(0xFF1E293B),
         selectedItemColor: const Color(0xFFF59E0B),
         unselectedItemColor: Colors.grey,
-        onTap: (index) => setState(() => _currentIndex = index),
+        onTap: (index) {
+          setState(() => _currentIndex = index);
+        },
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.chat_bubble), label: "Suhbatlar"),
-          BottomNavigationBarItem(icon: Icon(Icons.casino), label: "Omad"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profil"),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat_bubble),
+            label: "Suhbatlar",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.casino),
+            label: "Omad",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: "Profil",
+          ),
         ],
       ),
     );
@@ -152,10 +173,16 @@ class ChatListTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Telegram 1-ga-1", style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text(
+          "Telegram 1-ga-1",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         backgroundColor: const Color(0xFF1E293B),
         actions: [
-          IconButton(icon: const Icon(Icons.search), onPressed: () {}),
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () {},
+          ),
         ],
       ),
       body: ListView.builder(
@@ -167,12 +194,24 @@ class ChatListTab extends StatelessWidget {
               child: Text("U${i + 1}"),
             ),
             title: Text("Foydalanuvchi ${i + 1} ⭐"),
-            subtitle: const Text("Salom! Omad bo'limida o'ynaymizmi? 😎🔥"),
-            trailing: const Text("14:35", style: TextStyle(color: Colors.grey, fontSize: 12)),
+            subtitle: const Text(
+              "Salom! Omad bo'limida o'ynaymizmi? 😎🔥",
+            ),
+            trailing: const Text(
+              "14:35",
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 12,
+              ),
+            ),
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (ctx) => ChatDetailScreen(userName: "Foydalanuvchi ${i + 1}")),
+                MaterialPageRoute(
+                  builder: (ctx) => ChatDetailScreen(
+                    userName: "Foydalanuvchi ${i + 1}",
+                  ),
+                ),
               );
             },
           );
@@ -184,15 +223,29 @@ class ChatListTab extends StatelessWidget {
 
 class ChatDetailScreen extends StatefulWidget {
   final String userName;
-  const ChatDetailScreen({super.key, required this.userName});
+
+  const ChatDetailScreen({
+    super.key,
+    required this.userName,
+  });
 
   @override
   State<ChatDetailScreen> createState() => _ChatDetailScreenState();
 }
 
 class _ChatDetailScreenState extends State<ChatDetailScreen> {
-  final List<String> msgs = ["Salom!", "Telegram 1ga1 APK tayyor! 🔥👑"];
+  final List<String> msgs = [
+    "Salom!",
+    "Telegram 1ga1 APK tayyor! 🔥👑"
+  ];
+
   final TextEditingController inputCtrl = TextEditingController();
+
+  @override
+  void dispose() {
+    inputCtrl.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -200,9 +253,15 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
       appBar: AppBar(
         title: Row(
           children: [
-            CircleAvatar(radius: 18, child: Text(widget.userName[0])),
+            CircleAvatar(
+              radius: 18,
+              child: Text(widget.userName[0]),
+            ),
             const SizedBox(width: 10),
-            Text(widget.userName, style: const TextStyle(fontSize: 16)),
+            Text(
+              widget.userName,
+              style: const TextStyle(fontSize: 16),
+            ),
           ],
         ),
         backgroundColor: const Color(0xFF1E293B),
@@ -213,18 +272,27 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
             child: ListView.builder(
               padding: const EdgeInsets.all(12),
               itemCount: msgs.length,
-              itemBuilder: (context, idx) => Align(
-                alignment: idx % 2 == 0 ? Alignment.centerLeft : Alignment.centerRight,
-                child: Container(
-                  margin: const EdgeInsets.symmetric(vertical: 4),
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: idx % 2 == 0 ? const Color(0xFF1E293B) : const Color(0xFF0284C7),
-                    borderRadius: BorderRadius.circular(12),
+              itemBuilder: (context, idx) {
+                return Align(
+                  alignment: idx % 2 == 0
+                      ? Alignment.centerLeft
+                      : Alignment.centerRight,
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(vertical: 4),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: idx % 2 == 0
+                          ? const Color(0xFF1E293B)
+                          : const Color(0xFF0284C7),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      msgs[idx],
+                      style: const TextStyle(fontSize: 15),
+                    ),
                   ),
-                  child: Text(msgs[idx], style: const TextStyle(fontSize: 15)),
-                ),
-              ),
+                );
+              },
             ),
           ),
           Container(
@@ -232,7 +300,10 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
             color: const Color(0xFF1E293B),
             child: Row(
               children: [
-                const Icon(Icons.emoji_emotions, color: Colors.amber),
+                const Icon(
+                  Icons.emoji_emotions,
+                  color: Colors.amber,
+                ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: TextField(
@@ -244,17 +315,22 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.send, color: Color(0xFF38BDF8)),
+                  icon: const Icon(
+                    Icons.send,
+                    color: Color(0xFF38BDF8),
+                  ),
                   onPressed: () {
-                    if (inputCtrl.text.isNotEmpty) {
-                      setState(() => msgs.add(inputCtrl.text));
+                    if (inputCtrl.text.trim().isNotEmpty) {
+                      setState(() {
+                        msgs.add(inputCtrl.text.trim());
+                      });
                       inputCtrl.clear();
                     }
                   },
-                )
+                ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
@@ -289,11 +365,23 @@ class OmadTab extends StatelessWidget {
         backgroundColor: const Color(0xFF1E293B),
         actions: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 6,
+            ),
             margin: const EdgeInsets.only(right: 10),
-            decoration: BoxDecoration(color: Colors.black38, borderRadius: BorderRadius.circular(20)),
-            child: Text("⭐️ $stars Stars | 💎 $ton TON", style: const TextStyle(color: Colors.amber, fontWeight: FontWeight.bold)),
-          )
+            decoration: BoxDecoration(
+              color: Colors.black38,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              "⭐️ $stars Stars | 💎 $ton TON",
+              style: const TextStyle(
+                color: Colors.amber,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -306,29 +394,56 @@ class OmadTab extends StatelessWidget {
                 padding: const EdgeInsets.all(15),
                 child: Column(
                   children: [
-                    const Text("🚀 Rocket & Slots", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF38BDF8))),
+                    const Text(
+                      "🚀 Rocket & Slots",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF38BDF8),
+                      ),
+                    ),
                     const SizedBox(height: 10),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisAlignment:
+                          MainAxisAlignment.spaceEvenly,
                       children: [
                         ElevatedButton(
-                          style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFF59E0B)),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color(0xFFF59E0B),
+                          ),
                           onPressed: () {
-                            bool win = Random().nextBool();
+                            final bool win = Random().nextBool();
                             onSpin(10, win);
                           },
-                          child: const Text("SPIN (10 ⭐️)", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                          child: const Text(
+                            "SPIN (10 ⭐️)",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                         ElevatedButton(
-                          style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF10B981)),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color(0xFF10B981),
+                          ),
                           onPressed: () {
-                            bool win = Random().nextDouble() > 0.3;
+                            final bool win =
+                                Random().nextDouble() > 0.3;
                             onSpin(20, win);
                           },
-                          child: const Text("ROCKET (20 ⭐️)", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                          child: const Text(
+                            "ROCKET (20 ⭐️)",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -340,14 +455,26 @@ class OmadTab extends StatelessWidget {
                 padding: const EdgeInsets.all(15),
                 child: Column(
                   children: [
-                    const Text("🎁 Mening Giftlarim", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    const Text(
+                      "🎁 Mening Giftlarim",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     const SizedBox(height: 10),
                     gifts.isEmpty
-                        ? const Text("Sizda sovga yo'q", style: TextStyle(color: Colors.grey))
+                        ? const Text(
+                            "Sizda sovga yo'q",
+                            style: TextStyle(color: Colors.grey),
+                          )
                         : Column(
                             children: gifts.map((g) {
                               return ListTile(
-                                leading: const Icon(Icons.card_giftcard, color: Colors.amber),
+                                leading: const Icon(
+                                  Icons.card_giftcard,
+                                  color: Colors.amber,
+                                ),
                                 title: Text(g),
                                 trailing: ElevatedButton(
                                   onPressed: () => onTransfer(g),
@@ -359,7 +486,7 @@ class OmadTab extends StatelessWidget {
                   ],
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -391,28 +518,55 @@ class ProfileTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isAdmin = (userId == adminId);
+    final bool isAdmin = userId == adminId;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Profil"), backgroundColor: const Color(0xFF1E293B)),
+      appBar: AppBar(
+        title: const Text("Profil"),
+        backgroundColor: const Color(0xFF1E293B),
+      ),
       body: ListView(
         padding: const EdgeInsets.all(15),
         children: [
           ListTile(
-            leading: const CircleAvatar(radius: 28, child: Icon(Icons.person, size: 30)),
-            title: Text("ID: $userId", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-            subtitle: Text(isPremium ? "⭐ Telegram Premium" : "O'zbekiston | Oddiy profil"),
+            leading: const CircleAvatar(
+              radius: 28,
+              child: Icon(Icons.person, size: 30),
+            ),
+            title: Text(
+              "ID: $userId",
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+            subtitle: Text(
+              isPremium
+                  ? "⭐ Telegram Premium"
+                  : "O'zbekiston | Oddiy profil",
+            ),
           ),
           ListTile(
-            leading: const Icon(Icons.star, color: Colors.amber),
-            title: Text("Stars Balansi: $stars ⭐️"),
+            leading: const Icon(
+              Icons.star,
+              color: Colors.amber,
+            ),
+            title: Text(
+              "Stars Balansi: $stars ⭐️",
+            ),
           ),
           const SizedBox(height: 20),
           if (isAdmin)
             ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent, padding: const EdgeInsets.all(15)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.redAccent,
+                padding: const EdgeInsets.all(15),
+              ),
               icon: const Icon(Icons.admin_panel_settings),
-              label: const Text("🛠 ADMIN PANEL", style: TextStyle(fontWeight: FontWeight.bold)),
+              label: const Text(
+                "🛠 ADMIN PANEL",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -454,10 +608,12 @@ class AdminControlScreen extends StatefulWidget {
   });
 
   @override
-  State<AdminControlScreen> createState() => _AdminControlScreenState();
+  State<AdminControlScreen> createState() =>
+      _AdminControlScreenState();
 }
 
-class _AdminControlScreenState extends State<AdminControlScreen> {
+class _AdminControlScreenState
+    extends State<AdminControlScreen> {
   late int currentStars;
   late bool muted;
   late bool spammed;
@@ -475,16 +631,26 @@ class _AdminControlScreenState extends State<AdminControlScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("🛠 Bosh Admin Paneli"), backgroundColor: Colors.redDark),
+      appBar: AppBar(
+        title: const Text("🛠 Bosh Admin Paneli"),
+        backgroundColor: Colors.red.shade900,
+      ),
       body: ListView(
         padding: const EdgeInsets.all(15),
         children: [
           ListTile(
-            title: const Text("⭐️ Stars Balansini Qo'shish (+100 Stars)"),
+            title: const Text(
+              "⭐️ Stars Balansini Qo'shish (+100 Stars)",
+            ),
             trailing: const Icon(Icons.star),
             onTap: () {
               setState(() => currentStars += 100);
-              widget.onSave(currentStars, muted, spammed, premium);
+              widget.onSave(
+                currentStars,
+                muted,
+                spammed,
+                premium,
+              );
             },
           ),
           ListTile(
@@ -499,7 +665,12 @@ class _AdminControlScreenState extends State<AdminControlScreen> {
             value: muted,
             onChanged: (val) {
               setState(() => muted = val);
-              widget.onSave(currentStars, muted, spammed, premium);
+              widget.onSave(
+                currentStars,
+                muted,
+                spammed,
+                premium,
+              );
             },
           ),
         ],
