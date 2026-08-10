@@ -16,7 +16,7 @@ jobs:
       - name: Set up Java JDK
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '11'
           distribution: 'temurin'
 
       - name: Set up Flutter
@@ -24,16 +24,17 @@ jobs:
         with:
           channel: 'stable'
 
-      - name: Build Debug APK
+      - name: Build APK
         run: |
-          flutter create --project-name telegram_app my_app
-          cd my_app
-          cp ../lib/main.dart lib/main.dart
-          flutter build apk --debug --no-tree-shake-icons
+          mkdir temp_app
+          cd temp_app
+          flutter create --project-name telegram_app --platforms=android .
+          cp -r ../lib/. lib/
+          flutter build apk --debug
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
-          path: my_app/build/app/outputs/flutter-apk/app-debug.apk
+          path: temp_app/build/app/outputs/flutter-apk/app-debug.apk
           
