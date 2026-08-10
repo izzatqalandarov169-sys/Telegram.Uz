@@ -30,9 +30,10 @@ jobs:
           cp lib/main.dart main.dart.bak
           flutter create . --project-name telegram_app --platforms=android --org com.telegram.fullapp
           mv main.dart.bak lib/main.dart
+          flutter pub get
 
       - name: Build APK
-        run: flutter build apk --release
+        run: flutter build apk --release --no-tree-shake-icons
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
