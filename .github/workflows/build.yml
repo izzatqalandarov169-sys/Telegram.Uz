@@ -31,7 +31,9 @@ jobs:
           cd temp_app
           flutter create --project-name telegram_app --platforms=android .
           cp -r ../lib/. lib/
-          flutter build apk --debug
+          flutter pub add provider http shared_preferences intl url_launcher telegram_web_app
+          flutter pub get
+          flutter build apk --debug --no-tree-shake-icons
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
