@@ -28,7 +28,7 @@ class TelegramFullApp extends StatelessWidget {
   }
 }
 
-// ================= 0. AUTH / LOGIN SCREEN =================
+// ================= AUTH / LOGIN =================
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -40,10 +40,8 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   bool isLoginMode = true;
 
-  final TextEditingController phoneOrEmailCtrl =
-      TextEditingController();
-  final TextEditingController passwordCtrl =
-      TextEditingController();
+  final TextEditingController phoneOrEmailCtrl = TextEditingController();
+  final TextEditingController passwordCtrl = TextEditingController();
 
   static final Map<String, String> registeredUsers = {
     "+998975182526": "12345",
@@ -55,9 +53,7 @@ class _AuthScreenState extends State<AuthScreen> {
     String pass = passwordCtrl.text.trim();
 
     if (input.isEmpty || pass.isEmpty) {
-      _showError(
-        "Iltimos, telefon raqam/email va parolni kiriting!",
-      );
+      _showError("Iltimos, telefon raqam/email va parolni kiriting!");
       return;
     }
 
@@ -66,9 +62,7 @@ class _AuthScreenState extends State<AuthScreen> {
           registeredUsers[input] == pass) {
         _navigateToMainApp(input);
       } else {
-        _showError(
-          "Telefon raqam (email) yoki parol xato!",
-        );
+        _showError("Telefon raqam (email) yoki parol xato!");
       }
     } else {
       registeredUsers[input] = pass;
@@ -87,9 +81,7 @@ class _AuthScreenState extends State<AuthScreen> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (ctx) => MainNavigationScreen(
-          userAccount: user,
-        ),
+        builder: (ctx) => MainNavigationScreen(userAccount: user),
       ),
     );
   }
@@ -142,8 +134,7 @@ class _AuthScreenState extends State<AuthScreen> {
               ),
               const SizedBox(height: 8),
               const Text(
-                "SMS tasdiqlash talab qilinmaydi. "
-                "Parolingizni kiriting.",
+                "SMS tasdiqlash talab qilinmaydi. Parolingizni kiriting.",
                 style: TextStyle(
                   color: Colors.grey,
                   fontSize: 13,
@@ -160,8 +151,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     color: Colors.grey,
                   ),
                   hintText: "Telefon raqam yoki Email",
-                  hintStyle:
-                      const TextStyle(color: Colors.grey),
+                  hintStyle: const TextStyle(color: Colors.grey),
                   filled: true,
                   fillColor: const Color(0xFF1E2C3A),
                   border: OutlineInputBorder(
@@ -181,8 +171,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     color: Colors.grey,
                   ),
                   hintText: "Parolingizni kiriting",
-                  hintStyle:
-                      const TextStyle(color: Colors.grey),
+                  hintStyle: const TextStyle(color: Colors.grey),
                   filled: true,
                   fillColor: const Color(0xFF1E2C3A),
                   border: OutlineInputBorder(
@@ -270,9 +259,18 @@ class _MainNavigationScreenState
   double stars100PriceUsd = 1.99;
 
   List<Map<String, dynamic>> availableGifts = [
-    {"name": "🧸 Teddy Bear", "price": 50},
-    {"name": "🏆 Golden Trophy", "price": 150},
-    {"name": "👑 Imperial Crown", "price": 500},
+    {
+      "name": "🧸 Teddy Bear",
+      "price": 50,
+    },
+    {
+      "name": "🏆 Golden Trophy",
+      "price": 150,
+    },
+    {
+      "name": "👑 Imperial Crown",
+      "price": 500,
+    },
   ];
 
   int spinCost = 10;
@@ -360,8 +358,12 @@ class _MainNavigationScreenState
           spinCost: spinCost,
           rocketCost: rocketCost,
           gifts: availableGifts,
-          onSavePrices:
-              (pPrice, sPrice, sCost, rCost) {
+          onSavePrices: (
+            pPrice,
+            sPrice,
+            sCost,
+            rCost,
+          ) {
             setState(() {
               premiumPriceUsd = pPrice;
               stars100PriceUsd = sPrice;
@@ -427,44 +429,6 @@ class _MainNavigationScreenState
 class ChatListTab extends StatelessWidget {
   const ChatListTab({super.key});
 
-  Widget _buildChatItem(
-    IconData icon,
-    String title,
-    String subtitle,
-    String badge, {
-    String time = "",
-    Color color = Colors.blue,
-  }) {
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: color,
-        child: Icon(
-          icon,
-          color: Colors.white,
-        ),
-      ),
-      title: Text(
-        title,
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      subtitle: Text(
-        subtitle,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: const TextStyle(color: Colors.grey),
-      ),
-      trailing: Text(
-        time,
-        style: const TextStyle(
-          color: Colors.grey,
-          fontSize: 12,
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -524,6 +488,46 @@ class ChatListTab extends StatelessWidget {
             color: Colors.redAccent,
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildChatItem(
+    IconData icon,
+    String title,
+    String subtitle,
+    String badge, {
+    String time = "",
+    Color color = Colors.blue,
+  }) {
+    return ListTile(
+      leading: CircleAvatar(
+        backgroundColor: color,
+        child: Icon(
+          icon,
+          color: Colors.white,
+        ),
+      ),
+      title: Text(
+        title,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      subtitle: Text(
+        subtitle,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(
+          color: Colors.grey,
+        ),
+      ),
+      trailing: Text(
+        time,
+        style: const TextStyle(
+          color: Colors.grey,
+          fontSize: 12,
+        ),
       ),
     );
   }
@@ -605,9 +609,7 @@ class SettingsTab extends StatelessWidget {
               Icons.star_border,
               color: Colors.amber,
             ),
-            title: const Text(
-              "Telegram Yulduzlar (Stars)",
-            ),
+            title: const Text("Telegram Yulduzlar (Stars)"),
             trailing: Text(
               "$stars ⭐️ (\$$starsPrice)",
               style: const TextStyle(
@@ -749,11 +751,14 @@ class ProfileTab extends StatelessWidget {
   }
 }
 
-// ================= OMAD GAME =================
+// ================= OMAD =================
 
 class OmadTabScreen extends StatelessWidget {
   final int stars;
   final int spinCost;
   final int rocketCost;
   final List<Map<String, dynamic>> gifts;
-  final F
+  final Function(int) onSpin;
+
+  const OmadTabScreen({
+    sup
